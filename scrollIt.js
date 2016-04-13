@@ -16,8 +16,6 @@ define([], function () {
 
     // 判断元素是否在view port中(部分或全部)
     ScrollIt.prototype.isInView = function ($ele) {
-        console.log($(window).scrollTop() - ($ele.offset().top + $ele.height()));
-        console.log($ele.offset().top  - ($(window).scrollTop() + $(window).height()));
         return !($(window).scrollTop() - ($ele.offset().top + $ele.height()) > 0 ||
             $ele.offset().top  - ($(window).scrollTop() + $(window).height()) > 0);
     }
