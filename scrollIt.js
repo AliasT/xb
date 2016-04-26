@@ -33,7 +33,7 @@ define([], function () {
         
         $elements.each(function (index, elem) {
             if (self.isInView($(elem))) {
-                elem.setAttribute('viewed', 1);
+                elem.setAttribute('viewed', '1');
                 self.fn.call(elem, index);
                 return ;
             }
