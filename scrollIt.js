@@ -4,47 +4,47 @@ define([], function () {
         this.fn         = fn;
         this.$container = $container || $(window);
         this.timeout    = null;
-        this.isBinded   = false;
         this.$elements  = $([]);
     }
 
-
+    // 开始时注册一次事件.
     ScrollIt.prototype.start = function ($elements) {
-        this.$elements = $elements;
-        this.load($elements);
+        this.load(this.filter($elements));
         this.onScroll(this.isBinded);
     }
     
-    // 添加元素
-    ScrollIt.prototype.addElements = function ($elements) {
-        this.$elements.add($elements);  
-        this.load($elements);
+    ScrollIt.prototype.filter = function ($elements) {
+        return $elements.filter(function () {
+            return this.getAttribute('viewed') !== '1';
+        });
     }
-
+    
     // 判断元素是否在view port中(部分或全部)
     ScrollIt.prototype.isInView = function ($ele) {
         return !($(window).scrollTop() - ($ele.offset().top + $ele.height()) > 0 ||
             $ele.offset().top  - ($(window).scrollTop() + $(window).height()) > 0);
     }
 
-
+    // 判断$elements集合中的元素在不在区域中.
+    // 如果$elements是所有的元素
     ScrollIt.prototype.load = function ($elements) {
-        var self = this;
+        var self       = this;
+        var $remaining = $([]);
+        
         $elements.each(function (index, elem) {
-            console.log(self.isInView($(elem)));
-            if ('' + elem.getAttribute('viewed') !== '1' && self.isInView($(elem))) {
+            if (self.isInView($(elem))) {
                 elem.setAttribute('viewed', 1);
                 self.fn.call(elem, index);
+                return ;
             }
+            $remaining = $remaing.add($(elem));
         });
+        
+        this.$elements = this.$elements.add($remaining);
     }
 
-
+    // 滚动事件处理
     ScrollIt.prototype.onScroll = function () {
-        if (this.isBinded) {
-            return ;
-        }
-        
         var self = this;
         self.$container.on('scroll', function (event) {
             if (self.timeout) {
@@ -53,9 +53,8 @@ define([], function () {
 
             self.timeout = setTimeout(function () {
                 self.load(self.$elements);
-            }, 300);
+            }, 100);
         });
-        this.isBinded = true;
     }
 
 
