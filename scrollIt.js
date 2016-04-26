@@ -21,8 +21,8 @@ define([], function () {
     
     // 判断元素是否在view port中(部分或全部)
     ScrollIt.prototype.isInView = function ($ele) {
-        return !($(window).scrollTop() - ($ele.offset().top + $ele.height()) > 0 ||
-            $ele.offset().top  - ($(window).scrollTop() + $(window).height()) > 0);
+        return !(this.$container.scrollTop() - ($ele.position().top + $ele.height()) > 0 ||
+            $ele.position().top  - (this.$container.scrollTop() + this.$container.height()) > 0);
     }
 
     // 判断$elements集合中的元素在不在区域中.
