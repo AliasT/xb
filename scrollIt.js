@@ -1,16 +1,17 @@
 define([], function () {
 
-    function ScrollIt ($elements, fn, $container) {
-        this.$elements  = $elements;
+    function ScrollIt (fn, $container) {
         this.fn         = fn;
         this.$container = $container || $(window);
         this.timeout    = null;
+        this.isBinded   = false;
     }
 
 
-    ScrollIt.prototype.init = function () {
+    ScrollIt.prototype.start = function ($elements) {
+        this.$elements = $elements;
         this.load();
-        this.onScroll();
+        this.onScroll(this.isBinded);
     }
 
 
@@ -25,7 +26,7 @@ define([], function () {
         var self = this;
         self.$elements.each(function (index, elem) {
             console.log(self.isInView($(elem)));
-            if (+elem.getAttribute('viewed') !== 1 && self.isInView($(elem))) {
+            if ('' + elem.getAttribute('viewed') !== '1' && self.isInView($(elem))) {
                 elem.setAttribute('viewed', 1);
                 self.fn.call(elem, index);
             }
@@ -34,6 +35,10 @@ define([], function () {
 
 
     ScrollIt.prototype.onScroll = function () {
+        if (this.isBinded) {
+            return ;
+        }
+        
         var self = this;
         self.$container.on('scroll', function (event) {
             if (self.timeout) {
@@ -44,6 +49,7 @@ define([], function () {
                 self.load();
             }, 300);
         });
+        this.isBinded = true;
     }
 
 
