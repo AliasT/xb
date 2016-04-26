@@ -5,15 +5,21 @@ define([], function () {
         this.$container = $container || $(window);
         this.timeout    = null;
         this.isBinded   = false;
+        this.$elements  = $([]);
     }
 
 
     ScrollIt.prototype.start = function ($elements) {
         this.$elements = $elements;
-        this.load();
+        this.load($elements);
         this.onScroll(this.isBinded);
     }
-
+    
+    // 添加元素
+    ScrollIt.prototype.addElements = function ($elements) {
+        this.$elements.add($elements);  
+        this.load($elements);
+    }
 
     // 判断元素是否在view port中(部分或全部)
     ScrollIt.prototype.isInView = function ($ele) {
@@ -22,9 +28,9 @@ define([], function () {
     }
 
 
-    ScrollIt.prototype.load = function () {
+    ScrollIt.prototype.load = function ($elements) {
         var self = this;
-        self.$elements.each(function (index, elem) {
+        $elements.each(function (index, elem) {
             console.log(self.isInView($(elem)));
             if ('' + elem.getAttribute('viewed') !== '1' && self.isInView($(elem))) {
                 elem.setAttribute('viewed', 1);
@@ -46,7 +52,7 @@ define([], function () {
             }   
 
             self.timeout = setTimeout(function () {
-                self.load();
+                self.load(self.$elements);
             }, 300);
         });
         this.isBinded = true;
