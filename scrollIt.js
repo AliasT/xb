@@ -5,12 +5,12 @@ define([], function () {
         this.$container = $container || $(window);
         this.timeout    = null;
         this.$elements  = $([]);
+        this.onScroll();
     }
 
     // 开始时注册一次事件.
     ScrollIt.prototype.start = function ($elements) {
         this.load(this.filter($elements));
-        this.onScroll(this.isBinded);
     }
     
     ScrollIt.prototype.filter = function ($elements) {
@@ -37,7 +37,7 @@ define([], function () {
                 self.fn.call(elem, index);
                 return ;
             }
-            $remaining = $remaing.add($(elem));
+            $remaining = $remaining.add($(elem));
         });
         
         this.$elements = this.$elements.add($remaining);
@@ -47,6 +47,7 @@ define([], function () {
     ScrollIt.prototype.onScroll = function () {
         var self = this;
         self.$container.on('scroll', function (event) {
+            console.log(1);
             if (self.timeout) {
                 clearTimeout(self.timeout);
             }   
