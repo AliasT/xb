@@ -12,25 +12,23 @@ define([], function () {
      */
     function noob () {}
 
-    function ItemLoader ($elem, options) {
-        this.$elem     = $elem;
-        this.options   = options;
-        this.$observer = options.$observer;     /* 当指示器出现在窗口中,开始请求 */
+    function ItemLoader (options) {
+        this.options   = options;    /* 当指示器出现在窗口中,开始请求 */
         this.index     = 0;
         this.timeout   = null;
-        this.state     = options.state;         /* 页面刚加载时读取 */
         this.eventName = 'scroll.' + options.eventId;
+        this.scroll();
     }
 
 
-    ItemLoader.prototype.init = function () {
+    ItemLoader.prototype.init = function ($observer) {
         // 移除遮罩
         // this.$mask.remove();
+        this.state = $.extend({}, this.options.state);
+        this.$observer = $observer;
         if (this.observerIsInView()) {
             this.getItems(this.state);
         }
-
-        this.scroll();
     }
 
     
@@ -49,14 +47,13 @@ define([], function () {
     ItemLoader.prototype.scroll = function () {
         var _this = this;
         $(window).on(_this.eventName, function () {
+            console.log(1);
             if (_this.timeout) {
                 clearTimeout(_this.timeout);
             }
 
             _this.timeout = setTimeout (function () {
-                if (_this.observerIsInView()) {
-                    _this.getItems(_this.state);
-                }
+                _this.getItems(_this.state);
             }, 100);
         })
     }
@@ -81,17 +78,19 @@ define([], function () {
 
     /* 加载数据 */
     ItemLoader.prototype.getItems = function (params) {
-        var _this = this;
-        $.ajax({
-            url: this.options.requestUrl,
-            type: 'get',
-            dataType: 'json',
-            data: params,
-            success: _this.callback.bind(_this),
-            error: function(xhr) {
-                // todo:显示错误信息
-            }
-        });
+        if (this.observerIsInView()) {
+            $.ajax({
+                url: this.options.requestUrl,
+                type: 'get',
+                dataType: 'json',
+                data: params,
+                success: this.callback.bind(this),
+                error: function(xhr) {
+                    // todo:显示错误信息
+                }
+            });
+        }
+        
     }
 
 
