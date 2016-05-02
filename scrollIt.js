@@ -1,9 +1,12 @@
 define([], function () {
-
-    function ScrollIt (fn, $container) {
+    // 应尽量让用户不看到图片加载占位, 所以让加载指示在空间中提前出现
+    
+    function ScrollIt (fn, options) {
         this.fn         = fn;
-        this.$container = $container || $(window);
+        var options     = options || {};
+        this.$container = options.$container || $(window);
         this.timeout    = null;
+        this.holdheight = options.holdheight || 0;
         this.$elements  = $([]);
         this.onScroll();
     }
@@ -21,8 +24,8 @@ define([], function () {
     
     // 判断元素是否在view port中(部分或全部)
     ScrollIt.prototype.isInView = function ($ele) {
-        return !(this.$container.scrollTop() - ($ele.position().top + $ele.height()) > 0 ||
-            $ele.position().top  - (this.$container.scrollTop() + this.$container.height()) > 0);
+        return !(this.$container.scrollTop() - ($ele.offset().top + this.holdheight + $ele.height()) > 0 ||
+                    $ele.offset().top - (this.$container.scrollTop() + this.$container.height()) - this.holdheight> 0);
     }
 
     // 判断$elements集合中的元素在不在区域中.
@@ -32,6 +35,7 @@ define([], function () {
         var $remaining = $([]);
         
         $elements.each(function (index, elem) {
+            // if (elem.tagName == 'IMG') debugger;
             if (self.isInView($(elem))) {
                 elem.setAttribute('viewed', '1');
                 self.fn.call(elem, index);
@@ -47,7 +51,6 @@ define([], function () {
     ScrollIt.prototype.onScroll = function () {
         var self = this;
         self.$container.on('scroll', function (event) {
-            console.log(1);
             if (self.timeout) {
                 clearTimeout(self.timeout);
             }   
