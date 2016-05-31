@@ -1,11 +1,4 @@
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Document</title>
-</head>
-<body>
-  
-  <script>
+
     // url might contains ? letter
     // suppose url always contains a '&' letter, recursive invoke addUrlParams
 
@@ -56,9 +49,3 @@
     }
 
 
-    var o = { a: 3, b: 's', c: [2, 3, 4]};
-
-    console.log(addUrlParams('http://www.baidu.com?u=4', o));
-  </script>
-</body>
-</html>
