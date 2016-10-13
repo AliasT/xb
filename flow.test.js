@@ -45,9 +45,10 @@ function binarySearch<T: Comparable<any>> (elements: T[], x: T, left: number, ri
 		return binarySearch(elements, x, left, middle - 1)
 	} else if (result > 0) {
 		return binarySearch(elements, x, middle + 1, right)
-	} else if (result == 0) {
-		return middle;
-	}
+	} 
+	
+	return middle;
+	
 }
 
 console.log(binarySearch([new N(25), new N(30) ], new N(33), 0, 1))
