@@ -51,4 +51,8 @@ function binarySearch<T: Comparable<any>> (elements: T[], x: T, left: number, ri
 	
 }
 
-console.log(binarySearch([new N(25), new N(30) ], new N(33), 0, 1))
+Number.prototype.compareTo = function (x: number) {
+	return this - x
+}
+
+console.log(binarySearch([25, 35, 20, 30 ], 30, 0, 4))
